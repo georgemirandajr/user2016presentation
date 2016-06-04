@@ -1,0 +1,75 @@
+---
+title: "Predict 187"
+author: "George Miranda"
+date: "June 29, 2016"
+output:
+  ioslides_presentation: default
+  slidy_presentation:
+    theme: cerulean
+---
+
+## Probationer Population {.tabset .tabset-fade .tabset-pills}
+- Mostly male
+- Not murderers, but dangerous
+    + Map of ZIP
+    + Infographic
+    + Bar chart
+    
+## Map    
+```{r map-pkgs, echo=FALSE, warning=FALSE, message=FALSE, include=FALSE}
+setwd("~/predict187-pres")
+
+packages <- c("maps", "leaflet", "magrittr", "rgdal", "ggmap", "tigris")
+sapply(packages, require, character.only = TRUE)
+```
+
+```{r map,echo=FALSE, warning=FALSE, message=FALSE}
+setwd("~/predict187-pres")
+load(file = "murder_zip_tbl.rda")
+load(file = "murder_by_zip_tbl.rda")
+load(file = "mapCounty.rda")  # creates the county boundaries
+load(file = "joinDF.rda")  # shape file with murder data
+
+# Need to geocode probationer ZIP codes and map
+
+popup <- paste(
+               "Zip Code: ", as.character(joinDF$ZIP), "<br/>",
+               "Murders by Probationer: ", as.character(joinDF$count))
+
+pal <- colorNumeric(
+    c("yellow", "dark red"),
+    murder_zip_tbl$count,
+    na.color = "transparent"
+)
+
+# Map ZIP code boundaries in LA County
+
+leaflet() %>%
+    setView(lat = 34.053214, lng = -118.244106, zoom = 9) %>%
+    addProviderTiles("Stamen.TonerLite",
+                     options = providerTileOptions(noWrap = TRUE)) %>%
+    addLegend(pal = pal, 
+              values = murder_by_zip_tbl$count, 
+              position = "bottomright", 
+              title = "Murders") %>%
+    addPolygons(data=mapCounty, weight = 1, fillOpacity = 0.01) %>% 
+    addPolygons(data = joinDF, layerId = 1, stroke = FALSE, smoothFactor = 0.2,
+                fillOpacity = 0.75, color = ~pal(joinDF$count), popup = popup)  
+
+```
+
+## Feature Selection
+- Comparison to Berk's study (Variable Imp. plot)
+
+## Imbalance
+- Show ROC 1
+- ROC after _resampling_
+- ROC after _classwt_
+
+## Evaluation
+- Context, context, context
+- The final confusion matrix
+- Comparison to logistic regression and LS/CMI
+
+## Implementation
+- 2,300 early releases
