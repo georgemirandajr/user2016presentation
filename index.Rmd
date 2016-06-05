@@ -1,5 +1,5 @@
 ---
-title: "Predict 187"
+title: "Predicting Murderers in a Probationer Population"
 author: "George Miranda"
 date: "June 29, 2016"
 output:
@@ -10,21 +10,20 @@ output:
 
 ## Probationer Population {.tabset .tabset-fade .tabset-pills}
 - Mostly male
-- Not murderers, but dangerous
-    + Map of ZIP
-    + Infographic
-    + Bar chart
+- Mostly not murderers, but dangerous
+
+![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/new-piktochart_block_1.png)
     
-## Map    
+## LA County     
 ```{r map-pkgs, echo=FALSE, warning=FALSE, message=FALSE, include=FALSE}
-setwd("~/predict187-pres")
+setwd("~/user2016presentation/user2016presentation")
 
 packages <- c("maps", "leaflet", "magrittr", "rgdal", "ggmap", "tigris")
 sapply(packages, require, character.only = TRUE)
 ```
 
 ```{r map,echo=FALSE, warning=FALSE, message=FALSE}
-setwd("~/predict187-pres")
+setwd("~/user2016presentation/user2016presentation")
 load(file = "murder_zip_tbl.rda")
 load(file = "murder_by_zip_tbl.rda")
 load(file = "mapCounty.rda")  # creates the county boundaries
@@ -58,13 +57,31 @@ leaflet() %>%
 
 ```
 
-## Feature Selection
-- Comparison to Berk's study (Variable Imp. plot)
+## Berk's study (Variable Importance Plot)
+![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/screenshot_Berk_Paper_highlighted.png)
 
-## Imbalance
-- Show ROC 1
-- ROC after _resampling_
-- ROC after _classwt_
+## Feature selection
+```{r nz, echo=FALSE}
+setwd("~/user2016presentation/user2016presentation")
+load("nz.rda")
+tail(nz, 18)
+```
+
+
+## Model 1
+```{r model-1, eval=FALSE}
+fit <- randomForest(Murder ~ Age + White + Male + Total_Pop + 
+                        Black_Pop + Prop_Black + Income + 
+                        Zip_Present + Gang + ViolentCase, 
+                    data = train, 
+                    importance = TRUE, 
+                    ntree = 1500,
+                    na.action = na.roughfix)
+```
+
+## Model 1 ROC
+![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/model1_roc.png)
+
 
 ## Evaluation
 - Context, context, context
