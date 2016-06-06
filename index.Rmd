@@ -57,18 +57,21 @@ leaflet() %>%
 
 ```
 
-## Berk's study (Variable Importance Plot)
+## Berk's study (Variable Importance Plot) {.flexbox .vcenter}
 ![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/screenshot_Berk_Paper_highlighted.png)
 
-## Feature selection
+## Feature selection {.flexbox .vcenter}
 ```{r nz, echo=FALSE}
 setwd("~/user2016presentation/user2016presentation")
 load("nz.rda")
 tail(nz, 18)
 ```
 
+---- 
+![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/process_overview.png)
 
-## Model 1
+
+## Model 1 {.flexbox .vcenter}
 ```{r model-1, eval=FALSE}
 fit <- randomForest(Murder ~ Age + White + Male + Total_Pop + 
                         Black_Pop + Prop_Black + Income + 
@@ -79,9 +82,44 @@ fit <- randomForest(Murder ~ Age + White + Male + Total_Pop +
                     na.action = na.roughfix)
 ```
 
-## Model 1 ROC
+## Model 1 ROC {.flexbox .vcenter}
 ![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/model1_roc.png)
 
+
+## Model 1 Variable Importance {.flexbox .vcenter}
+![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/model1_varImp.png)
+
+## Model 2 {.flexbox .vcenter}
+
+```{r model-2, eval=FALSE}
+fit2 <- randomForest(Murder ~ Age + Total_Pop + Black_Pop + 
+                         Prop_Black + Income + Zip_Present + 
+                         ViolentCase, 
+                    data = train, 
+                    importance = TRUE, 
+                    ntree = 1500,
+                    mtry = 1,
+                    cutoff = c(0.65, 0.30),
+                    classwt = c(125, 1),
+                    sampsize = c("0" = 100, "1" = 34),
+                    strata = as.factor(train$Murder),
+                    keep.inbag = TRUE,
+                    na.action = na.roughfix)
+```
+
+## Model 2 ROC {.flexbox .vcenter}
+![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/model2_roc.png)
+
+## Model 2 Variable Importance {.flexbox .vcenter}
+![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/model2_varImp.png)
+
+## Model 2 Confusion Matrix {.flexbox .vcenter .smaller} 
+```{r conf-matrix, echo=FALSE}
+load("confus_matrix.rda")
+cm2$table
+cm2$overall
+cm2$byClass
+```
 
 ## Evaluation
 - Context, context, context
