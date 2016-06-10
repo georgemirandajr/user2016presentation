@@ -10,7 +10,8 @@ output:
 
 ## Probationer Population {.tabset .tabset-fade .tabset-pills}
 - Mostly male
-- Mostly not murderers, but dangerous
+- Mostly not murderers (<1%), but dangerous
+- Over-crowded jails = early release from state prisons
 
 ![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/new-piktochart_block_1.png)
     
@@ -50,26 +51,29 @@ leaflet() %>%
     addLegend(pal = pal, 
               values = murder_by_zip_tbl$count, 
               position = "bottomright", 
-              title = "Murders") %>%
+              title = "Murderers") %>%
     addPolygons(data=mapCounty, weight = 1, fillOpacity = 0.01) %>% 
     addPolygons(data = joinDF, layerId = 1, stroke = FALSE, smoothFactor = 0.2,
                 fillOpacity = 0.75, color = ~pal(joinDF$count), popup = popup)  
 
 ```
 
+## {.flexbox .vcenter} 
+Where did this project start?
+
+
 ## Berk's study (Variable Importance Plot) {.flexbox .vcenter}
 ![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/screenshot_Berk_Paper_highlighted.png)
-
-## Feature selection {.flexbox .vcenter}
-```{r nz, echo=FALSE}
-setwd("~/user2016presentation/user2016presentation")
-load("nz.rda")
-tail(nz, 18)
-```
 
 ---- 
 ![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/process_overview.png)
 
+## Feature selection {.flexbox .vcenter .smaller}
+```{r nz, echo=FALSE}
+setwd("~/user2016presentation/user2016presentation")
+load("nz.rda")
+tail(nz, 17)
+```
 
 ## Model 1 {.flexbox .vcenter}
 ```{r model-1, eval=FALSE}
@@ -78,8 +82,7 @@ fit <- randomForest(Murder ~ Age + White + Male + Total_Pop +
                         Zip_Present + Gang + ViolentCase, 
                     data = train, 
                     importance = TRUE, 
-                    ntree = 1500,
-                    na.action = na.roughfix)
+                    ntree = 1500)
 ```
 
 ## Model 1 ROC {.flexbox .vcenter}
@@ -98,9 +101,8 @@ fit2 <- randomForest(Murder ~ Age + Total_Pop + Black_Pop +
                     data = train, 
                     importance = TRUE, 
                     ntree = 1500,
-                    mtry = 1,
+                    mtry = 2,
                     cutoff = c(0.65, 0.30),
-                    classwt = c(125, 1),
                     sampsize = c("0" = 100, "1" = 34),
                     strata = as.factor(train$Murder),
                     keep.inbag = TRUE,
@@ -117,14 +119,18 @@ fit2 <- randomForest(Murder ~ Age + Total_Pop + Black_Pop +
 ```{r conf-matrix, echo=FALSE}
 load("confus_matrix.rda")
 cm2$table
-cm2$overall
 cm2$byClass
 ```
 
-## Evaluation
+## Ongoing Evaluation
 - Context, context, context
-- The final confusion matrix
+- False negatives are to be avoided
 - Comparison to logistic regression and LS/CMI
 
-## Implementation
-- 2,300 early releases
+## Implementation {.flexbox .vcenter}
+- 2,300 early releases  
+  
+![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/app.png)
+
+## Algorithms in the news {.flexbox .vcenter}
+![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/WSJ_rule-on-predictive-algorithm.png)
