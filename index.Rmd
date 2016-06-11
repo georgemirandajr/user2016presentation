@@ -8,14 +8,20 @@ output:
     theme: cerulean
 ---
 
+## Today's Overview
+- Describe the population of interest
+- Discuss the problem
+- Review the methodology and evaluation
+- Shiny R Markdown implementation
+
 ## Probationer Population {.tabset .tabset-fade .tabset-pills}
 - Mostly male
-- Mostly not murderers (<1%), but dangerous
-- Over-crowded jails = early release from state prisons
+- Mostly not murderers (>99%), but dangerous
+- State prisoners that were released early
 
 ![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/new-piktochart_block_1.png)
     
-## LA County     
+## Murderers by Location in LA County  
 ```{r map-pkgs, echo=FALSE, warning=FALSE, message=FALSE, include=FALSE}
 setwd("~/user2016presentation/user2016presentation")
 
@@ -62,13 +68,13 @@ leaflet() %>%
 Where did this project start?
 
 
-## Berk's study (Variable Importance Plot) {.flexbox .vcenter}
+## Fig. 1 from Berk's study | Variable Importance {.flexbox .vcenter}
 ![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/screenshot_Berk_Paper_highlighted.png)
 
 ---- 
 ![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/process_overview.png)
 
-## Feature selection {.flexbox .vcenter .smaller}
+## Feature selection | Near Zero Variance {.flexbox .vcenter .smaller}
 ```{r nz, echo=FALSE}
 setwd("~/user2016presentation/user2016presentation")
 load("nz.rda")
@@ -125,12 +131,14 @@ cm2$byClass
 ## Ongoing Evaluation
 - Context, context, context
 - False negatives are to be avoided
-- Comparison to logistic regression and LS/CMI
+- Comparison to logistic regression and risk assessment tools
 
-## Implementation {.flexbox .vcenter}
+## Shiny R Markdown Implementation {.flexbox .vcenter}
 - 2,300 early releases  
   
 ![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/app.png)
 
 ## Algorithms in the news {.flexbox .vcenter}
 ![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/WSJ_rule-on-predictive-algorithm.png)
+
+## References
