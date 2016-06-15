@@ -2,6 +2,7 @@
 title: "Predicting Murderers in a Probationer Population"
 author: "George Miranda"
 date: "June 29, 2016"
+bibliography: C:/Users/Geo/Documents/user2016presentation/bibliography.bib
 output:
   ioslides_presentation: default
   slidy_presentation:
@@ -17,7 +18,7 @@ output:
 ## Probationer Population {.tabset .tabset-fade .tabset-pills}
 - Mostly male
 - Mostly not murderers (>99%), but dangerous
-- State prisoners that were released early
+- State prisoners that were released on probation early
 
 ![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/new-piktochart_block_1.png)
     
@@ -68,7 +69,7 @@ leaflet() %>%
 Where did this project start?
 
 
-## Fig. 1 from Berk's study | Variable Importance {.flexbox .vcenter}
+## Fig. 1 from Berk's study | n = 30,000 {.flexbox .vcenter .smaller}
 ![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/screenshot_Berk_Paper_highlighted.png)
 
 ---- 
@@ -92,7 +93,7 @@ fit <- randomForest(Murder ~ Age + White + Male + Total_Pop +
 ```
 
 ## Model 1 ROC {.flexbox .vcenter}
-![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/model1_roc.png)
+![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/roc1.png)
 
 
 ## Model 1 Variable Importance {.flexbox .vcenter}
@@ -116,16 +117,22 @@ fit2 <- randomForest(Murder ~ Age + Total_Pop + Black_Pop +
 ```
 
 ## Model 2 ROC {.flexbox .vcenter}
-![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/model2_roc.png)
+![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/roc2.png)
 
 ## Model 2 Variable Importance {.flexbox .vcenter}
 ![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/model2_varImp.png)
 
-## Model 2 Confusion Matrix {.flexbox .vcenter .smaller} 
-```{r conf-matrix, echo=FALSE}
-load("confus_matrix.rda")
-cm2$table
-cm2$byClass
+## Confusion Matrix {.smaller} 
+
+Model 1
+```{r cm, echo = FALSE}
+load("mod1cm.rda")
+a
+```
+Model2
+```{r cm2, echo=FALSE}
+load("mod2cm.rda")
+b
 ```
 
 ## Ongoing Evaluation
@@ -133,12 +140,22 @@ cm2$byClass
 - False negatives are to be avoided
 - Comparison to logistic regression and risk assessment tools
 
+## Comparison to other models { .smaller }
+- Risk assessment tool has 43% accuracy, 32% false negatives
+
+- Logistic regression: 99% accuracy, 90% false negatives, low sensitivity
+    + Berk's false negative rate was 99.7%
+
 ## Shiny R Markdown Implementation {.flexbox .vcenter}
-- 2,300 early releases  
+2,300 early releases from probation
   
 ![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/app.png)
 
 ## Algorithms in the news {.flexbox .vcenter}
 ![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/WSJ_rule-on-predictive-algorithm.png)
 
-## References
+## References {.smaller}
+
+- Berk, R., Sherman, L., Barnes, G., Kurtz, E., & Ahlman, L. (2009). _Forecasting murder within a population of probationers and parolees: a high stakes application of statistical learning_. Journal of the Royal Statistical Society: Series A (Statistics in Society), 172(1), 191-211.
+- Xavier Robin, Natacha Turck, Alexandre Hainard, Natalia Tiberti, 
+  Frédérique Lisacek, Jean-Charles Sanchez and Markus Müller (2011). _pROC: an open-source package for R and S+ to analyze and compare ROC curves_. BMC Bioinformatics, 12, p. 77. DOI: 10.1186/1471-2105-12-77.
