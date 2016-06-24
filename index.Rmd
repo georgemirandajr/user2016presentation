@@ -2,7 +2,6 @@
 title: "Predicting Murderers in a Probationer Population"
 author: "George Miranda"
 date: "June 29, 2016"
-bibliography: C:/Users/Geo/Documents/user2016presentation/bibliography.bib
 output:
   ioslides_presentation: default
   slidy_presentation:
@@ -10,19 +9,83 @@ output:
 ---
 
 ## Today's Overview
-- Describe the population of interest
-- Discuss the problem
+- The motivation
+- Describe the population
 - Review the methodology and evaluation
-- Shiny R Markdown implementation
+- Implementation with Shiny R Markdown 
+
+## Motivation
+1. Predict potential murderers in the current probation population
+    + More dangerous than usual probationers
+2. A vision for using this information
+    + Manageable cases
+    + Individualized interventions
 
 ## Probationer Population {.tabset .tabset-fade .tabset-pills}
-- Mostly male
+- Mostly male (90%)
 - Mostly not murderers (>99%), but dangerous
-- State prisoners that were released on probation early
+- Previously were state prisoners that are released on probation
 
 ![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/new-piktochart_block_1.png)
-    
-## Murderers by Location in LA County  
+
+## {.flexbox .vcenter} 
+Where did this project start?
+
+
+## Fig. 1 from Berk's study | N = 30,000 {.flexbox .vcenter .smaller}
+![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/screenshot_Berk_Paper_highlighted.png)
+
+---- 
+![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/process_overview.png)
+
+## Model 1 {.flexbox .vcenter}
+```{r model-1, eval=FALSE}
+fit <- randomForest(Murder ~ Age + White + Male + Total_Pop + 
+                        Black_Pop + Prop_Black + Income + 
+                        Zip_Present + Gang + ViolentCase, 
+                    data = train, 
+                    importance = TRUE, 
+                    ntree = 1500)
+```
+
+## Model 2 {.flexbox .vcenter}
+
+```{r model-2, eval=FALSE}
+fit2 <- randomForest(Murder ~ Age + Total_Pop + Black_Pop + 
+                         Prop_Black + Income + Zip_Present + 
+                         ViolentCase, 
+                    data = train, 
+                    importance = TRUE, 
+                    ntree = 1500,
+                    mtry = 2,
+                    cutoff = c(0.65, 0.30),
+                    sampsize = c("0" = 100, "1" = 34),
+                    strata = as.factor(train$Murder),
+                    keep.inbag = TRUE,
+                    na.action = na.roughfix)
+```
+
+
+## Ongoing Evaluation
+- Context, context, context
+- False negatives are to be avoided
+
+## Shiny R Markdown Implementation {.flexbox .vcenter}
+2,300 early releases from probation
+  
+![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/app.png)
+
+## Algorithms in the news {.flexbox .vcenter}
+![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/WSJ_rule-on-predictive-algorithm.png)
+
+## References {.smaller}
+
+- Berk, R., Sherman, L., Barnes, G., Kurtz, E., & Ahlman, L. (2009). _Forecasting murder within a population of probationers and parolees: a high stakes application of statistical learning_. Journal of the Royal Statistical Society: Series A (Statistics in Society), 172(1), 191-211.
+- Xavier Robin, Natacha Turck, Alexandre Hainard, Natalia Tiberti, 
+  Frédérique Lisacek, Jean-Charles Sanchez and Markus Müller (2011). _pROC: an open-source package for R and S+ to analyze and compare ROC curves_. BMC Bioinformatics, 12, p. 77. DOI: 10.1186/1471-2105-12-77.
+  
+## Appendix A | Murderers by Location in LA County  
+
 ```{r map-pkgs, echo=FALSE, warning=FALSE, message=FALSE, include=FALSE}
 setwd("~/user2016presentation/user2016presentation")
 
@@ -65,97 +128,31 @@ leaflet() %>%
 
 ```
 
-## {.flexbox .vcenter} 
-Where did this project start?
+## Appendix B | Near Zero Variance {.flexbox .vcenter .smaller}
 
-
-## Fig. 1 from Berk's study | n = 30,000 {.flexbox .vcenter .smaller}
-![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/screenshot_Berk_Paper_highlighted.png)
-
----- 
-![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/process_overview.png)
-
-## Feature selection | Near Zero Variance {.flexbox .vcenter .smaller}
 ```{r nz, echo=FALSE}
 setwd("~/user2016presentation/user2016presentation")
 load("nz.rda")
 tail(nz, 17)
 ```
 
-## Model 1 {.flexbox .vcenter}
-```{r model-1, eval=FALSE}
-fit <- randomForest(Murder ~ Age + White + Male + Total_Pop + 
-                        Black_Pop + Prop_Black + Income + 
-                        Zip_Present + Gang + ViolentCase, 
-                    data = train, 
-                    importance = TRUE, 
-                    ntree = 1500)
-```
-
-## Model 1 ROC {.flexbox .vcenter}
+## Appendix C | Model 1 ROC {.flexbox .vcenter .smaller}
 ![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/roc1.png)
-
-
-## Model 1 Variable Importance {.flexbox .vcenter}
-![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/model1_varImp.png)
-
-## Model 2 {.flexbox .vcenter}
-
-```{r model-2, eval=FALSE}
-fit2 <- randomForest(Murder ~ Age + Total_Pop + Black_Pop + 
-                         Prop_Black + Income + Zip_Present + 
-                         ViolentCase, 
-                    data = train, 
-                    importance = TRUE, 
-                    ntree = 1500,
-                    mtry = 2,
-                    cutoff = c(0.65, 0.30),
-                    sampsize = c("0" = 100, "1" = 34),
-                    strata = as.factor(train$Murder),
-                    keep.inbag = TRUE,
-                    na.action = na.roughfix)
-```
-
-## Model 2 ROC {.flexbox .vcenter}
+  
+## Appendix D | Model 2 ROC {.flexbox .vcenter .smaller}
 ![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/roc2.png)
 
-## Model 2 Variable Importance {.flexbox .vcenter}
-![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/model2_varImp.png)
-
-## Confusion Matrix {.smaller} 
-
+## Appendix E | Confusion Matrix {.flexbox .vcenter .smaller}
 Model 1
-```{r cm, echo = FALSE}
+```{r cm1, echo = FALSE}
 load("mod1cm.rda")
 a
 ```
-Model2
+Model 2
 ```{r cm2, echo=FALSE}
 load("mod2cm.rda")
 b
 ```
 
-## Ongoing Evaluation
-- Context, context, context
-- False negatives are to be avoided
-- Comparison to logistic regression and risk assessment tools
-
-## Comparison to other models { .smaller }
+## Appendix F | Comparison to current model
 - Risk assessment tool has 43% accuracy, 32% false negatives
-
-- Logistic regression: 99% accuracy, 90% false negatives, low sensitivity
-    + Berk's false negative rate was 99.7%
-
-## Shiny R Markdown Implementation {.flexbox .vcenter}
-2,300 early releases from probation
-  
-![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/app.png)
-
-## Algorithms in the news {.flexbox .vcenter}
-![](C:/Users/Geo/Documents/user2016presentation/user2016presentation/images/WSJ_rule-on-predictive-algorithm.png)
-
-## References {.smaller}
-
-- Berk, R., Sherman, L., Barnes, G., Kurtz, E., & Ahlman, L. (2009). _Forecasting murder within a population of probationers and parolees: a high stakes application of statistical learning_. Journal of the Royal Statistical Society: Series A (Statistics in Society), 172(1), 191-211.
-- Xavier Robin, Natacha Turck, Alexandre Hainard, Natalia Tiberti, 
-  Frédérique Lisacek, Jean-Charles Sanchez and Markus Müller (2011). _pROC: an open-source package for R and S+ to analyze and compare ROC curves_. BMC Bioinformatics, 12, p. 77. DOI: 10.1186/1471-2105-12-77.
