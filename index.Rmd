@@ -1,6 +1,6 @@
 ---
 title: "Predicting Murderers in a Probationer Population"
-author: "George Miranda"
+author: "Jorge Miranda"
 date: "June 29, 2016"
 output:
   ioslides_presentation: default
